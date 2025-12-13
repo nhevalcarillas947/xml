@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Barangay Paknaan Health Center - Emergency Contact</title>
+    <link rel="stylesheet" href="User.css">
+</head>
+<body>
+    <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+    <div id="modalBox" style="background:white; padding:20px; border-radius:8px; max-width:400px; width:90%; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+        <p id="modalMessage" style="margin-bottom:20px; font-size:16px;"></p>
+        <div style="display:flex; justify-content:center; gap:10px;">
+            <button id="modalConfirm" style="background-color:#1a73e8;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">Yes</button>
+            <button id="modalCancel" style="background-color:#ccc;color:black;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">No</button>
+        </div>
+    </div>
+</div>
+    <!-- Sticky Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-clinic-medical"></i> Barangay Paknaan Health Center</h1>
+            <div class="location">Plaridel St., Barangay Paknaan, Mandaue City, Cebu</div>
+            <div class="tagline" id="dynamicTagline">"Your Partner in Community Health and Wellness"</div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+    <button onclick="book()" 
+            style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Book an Appointment</span>
+    </button>
+ <button onclick="inbox()" 
+    style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; position: relative;">
+    <i class="fas fa-calendar-alt"></i>
+    <span>Inbox</span>
+    <span id="inboxBadge" class="notification-badge" style="display: none;">3</span>
+</button>
+
+    <button onclick="logout()" 
+            style="background-color: blue; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Log Out</span>
+    </button>
+</div>
+            <!-- Navigation -->
+            <nav class="main-nav">
+                <div class="nav-grid">
+                    <a href="user.html" class="nav-item services">
+                        <i class="fas fa-stethoscope"></i>
+                        <h3>Our Services</h3>
+                        <p>View all health services</p>
+                    </a>
+                    
+                    <a href="ope.html" class="nav-item hours">
+                        <i class="fas fa-clock"></i>
+                        <h3>Operating Hours</h3>
+                        <p>View schedule</p>
+                    </a>
+                    
+                    <a href="loc.html" class="nav-item location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Our Location</h3>
+                        <p>Find our health center</p>
+                    </a>
+                    
+                    <a href="emer.html" class="nav-item emergency">
+                        <i class="fas fa-ambulance"></i>
+                        <h3>Emergency Contact</h3>
+                        <p>Immediate assistance</p>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-content">
+            <div class="page-header">
+                <h2 class="page-title"><i class="fas fa-ambulance"></i> Emergency Contact</h2>
+                <p class="page-subtitle">For medical emergencies, contact information, and immediate assistance.</p>
+            </div>
+          
+            <div class="emergency-content">
+                <div class="emergency-header">
+                    <h3 style="color: var(--danger); font-size: 24px; margin-bottom: 15px;">
+                        <i class="fas fa-exclamation-triangle"></i> In Case of Emergency
+                    </h3>
+                    <p style="color: var(--gray); font-size: 18px;">
+                        For life-threatening emergencies, proceed immediately to the nearest hospital.
+                    </p>
+                </div>
+                
+                <div class="emergency-number">(032) 1345-6789</div>
+                <p style="color: var(--gray); font-size: 18px; margin: 20px 0 40px;">
+                    Call this number for health center emergencies during and after operating hours.
+                </p>
+                
+                <div class="emergency-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>For life-threatening emergencies, call 911 or proceed immediately to the nearest hospital.</span>
+                </div>
+                
+                <div class="hospitals-section">
+                    <h3>Nearest Hospitals & Emergency Facilities</h3>
+                    <ul class="emergency-list">
+                        <li>
+                            <strong>Mandaue City Hospital</strong>
+                            <span>(032) 345-1234</span>
+                        </li>
+                        <li>
+                            <strong>Vicente Sotto Memorial Medical Center</strong>
+                            <span>(032) 253-9891</span>
+                        </li>
+                        <li>
+                            <strong>Chong Hua Hospital</strong>
+                            <span>(032) 255-8000</span>
+                        </li>
+                        <li>
+                            <strong>Perpetual Succour Hospital</strong>
+                            <span>(032) 255-5555</span>
+                        </li>
+                        <li>
+                            <strong>Cebu Doctors' University Hospital</strong>
+                            <span>(032) 255-5555</span>
+                        </li>
+                        <li>
+                            <strong>ARC Hospital</strong>
+                            <span>(032) 346-8888</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 50px; padding: 25px; background: #fff8e1; border-radius: 10px; border-left: 4px solid var(--accent);">
+                    <h3 style="color: #856404; margin-bottom: 15px; font-size: 20px;">
+                        <i class="fas fa-lightbulb"></i> Emergency Preparedness Tips
+                    </h3>
+                    <ul style="color: #856404; line-height: 1.8; padding-left: 20px;">
+                        <li>Keep emergency numbers saved in your phone</li>
+                        <li>Know the fastest route to the nearest hospital</li>
+                        <li>Have your barangay health card and valid ID ready</li>
+                        <li>Keep a list of current medications and allergies</li>
+                        <li>For non-life-threatening issues, visit during regular hours</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-header">
+                <h3><i class="fas fa-hands-helping"></i> Serving Our Community Since 1995</h3>
+                <p>
+                    Barangay Paknaan Health Center is committed to providing accessible, quality healthcare services to all residents. Our dedicated team works tirelessly to promote health and wellness in our community.
+                </p>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>General Inquiries: (032) 123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email: healthcenter@paknaan.gov.ph</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Open: Mon-Fri 8AM-5PM | Sat 8AM-12PM</span>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2023 Barangay Paknaan Health Center. All rights reserved. | "Your Health, Our Priority" | Mandaue City, Cebu, Philippines
+            </div>
+        </div>
+    </div>
+    <!-- Inbox Modal -->
+<div id="inboxModalOverlay" class="modal-overlay" style="display:none;">
+    <div id="inboxModalBox" class="modal-box" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-envelope"></i> Admin Messages</h3>
+            <button onclick="closeInboxModal()" class="close-btn">&times;</button>
+        </div>
+        
+        <div class="messages-container" id="messagesContainer">
+            <!-- Messages will be displayed here -->
+            <div class="no-messages" id="noMessages">
+                <i class="fas fa-inbox"></i>
+                <p>No messages yet.</p>
+            </div>
+            
+            <!-- Example message template (initially hidden) -->
+            <div class="message-item" style="display: none;">
+                <div class="message-header">
+                    <span class="message-date">Date</span>
+                    <span class="message-priority low">Priority</span>
+                </div>
+                <div class="message-content">
+                    <p>Message content here...</p>
+                </div>
+                <div class="message-footer">
+                    <span class="message-sender">From: Admin</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button onclick="closeInboxModal()" class="close-btn-footer">Close</button>
+        </div>
+    </div>
+</div>
+
+    <script src="User.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Barangay Paknaan Health Center - Our Location</title>
+    <link rel="stylesheet" href="User.css">
+</head>
+<body>
+    <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+    <div id="modalBox" style="background:white; padding:20px; border-radius:8px; max-width:400px; width:90%; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+        <p id="modalMessage" style="margin-bottom:20px; font-size:16px;"></p>
+        <div style="display:flex; justify-content:center; gap:10px;">
+            <button id="modalConfirm" style="background-color:#1a73e8;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">Yes</button>
+            <button id="modalCancel" style="background-color:#ccc;color:black;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">No</button>
+        </div>
+    </div>
+</div>
+    <!-- Sticky Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-clinic-medical"></i> Barangay Paknaan Health Center</h1>
+            <div class="location">Plaridel St., Barangay Paknaan, Mandaue City, Cebu</div>
+            <div class="tagline" id="dynamicTagline">"Your Partner in Community Health and Wellness"</div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+    <button onclick="book()" 
+            style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Book an Appointment</span>
+    </button>
+     <button onclick="inbox()" 
+        style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+    <i class="fas fa-calendar-alt"></i>
+    <span>Inbox</span>
+</button>
+
+    <button onclick="logout()" 
+            style="background-color: blue; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Log Out</span>
+    </button>
+</div>
+            <!-- Navigation -->
+            <nav class="main-nav">
+                <div class="nav-grid">
+                    <a href="user.html" class="nav-item services">
+                        <i class="fas fa-stethoscope"></i>
+                        <h3>Our Services</h3>
+                        <p>View all health services</p>
+                    </a>
+                    
+                    <a href="ope.html" class="nav-item hours">
+                        <i class="fas fa-clock"></i>
+                        <h3>Operating Hours</h3>
+                        <p>View schedule</p>
+                    </a>
+                    
+                    <a href="loc.html" class="nav-item location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Our Location</h3>
+                        <p>Find our health center</p>
+                    </a>
+                    
+                    <a href="emer.html" class="nav-item emergency">
+                        <i class="fas fa-ambulance"></i>
+                        <h3>Emergency Contact</h3>
+                        <p>Immediate assistance</p>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-content">
+            <div class="page-header">
+                <h2 class="page-title"><i class="fas fa-map-marker-alt"></i> Our Location</h2>
+                <p class="page-subtitle">Find our health center easily. We're conveniently located in Barangay Paknaan, Mandaue City.</p>
+            </div>
+            
+            <div class="location-content">
+                <p class="location-text">
+                    <strong>Full Address:</strong> Plaridel Street, Barangay Paknaan, Mandaue City, Cebu 6014, Philippines<br>
+                    <strong>Landmark:</strong> Near Paknaan Elementary School and Barangay Hall<br>
+                    <strong>GPS Coordinates:</strong> 10.3568° N, 123.9391° E
+                </p>
+                
+                <div class="map-container">
+                    <div class="map-text">
+                        <i class="fas fa-map"></i>
+                        <div>Barangay Paknaan Health Center</div>
+                        <div>Plaridel St., Paknaan, Mandaue City</div>
+                    </div>
+                </div>
+                
+                <div class="directions">
+                    <h3><i class="fas fa-directions"></i> How to Get Here</h3>
+                    <ul>
+                        <li><strong>By Jeepney:</strong> Ride a jeepney with "Paknaan" or "Mandaue-Mactan" route. Get off at Paknaan Elementary School.</li>
+                        <li><strong>By Taxi/Grab:</strong> Tell the driver "Barangay Paknaan Health Center, near Paknaan Elementary School"</li>
+                        <li><strong>By Private Vehicle:</strong> Parking is available in front of the health center. Ample space for motorcycles and bicycles.</li>
+                        <li><strong>By Public Utility Vehicle (PUV):</strong> Available routes from Mandaue City proper and Lapu-Lapu City.</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 40px; padding: 25px; background: #f8f9fa; border-radius: 10px;">
+                    <h3 style="color: var(--primary); margin-bottom: 15px; font-size: 22px;">
+                        <i class="fas fa-info-circle"></i> Additional Information
+                    </h3>
+                    <div style="color: var(--gray); line-height: 1.8;">
+                        <p><strong>Accessibility:</strong> The health center is wheelchair accessible with ramps at the entrance.</p>
+                        <p><strong>Parking:</strong> Free parking is available for patients and visitors.</p>
+                        <p><strong>Public Transport:</strong> Jeepneys pass by every 10-15 minutes during operating hours.</p>
+                        <p><strong>Walking Distance:</strong> From Paknaan Elementary School: 2-minute walk. From Barangay Hall: 3-minute walk.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-header">
+                <h3><i class="fas fa-hands-helping"></i> Serving Our Community Since 1995</h3>
+                <p>
+                    Barangay Paknaan Health Center is committed to providing accessible, quality healthcare services to all residents. Our dedicated team works tirelessly to promote health and wellness in our community.
+                </p>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>General Inquiries: (032) 123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email: healthcenter@paknaan.gov.ph</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Open: Mon-Fri 8AM-5PM | Sat 8AM-12PM</span>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2023 Barangay Paknaan Health Center. All rights reserved. | "Your Health, Our Priority" | Mandaue City, Cebu, Philippines
+            </div>
+        </div>
+    </div>
+
+    <script src="User.js"></script>
+</body>
+</html>

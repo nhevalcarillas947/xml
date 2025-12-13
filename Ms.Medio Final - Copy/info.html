@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information Form</title>
+    <link rel="stylesheet" href="info.css">
+</head>
+<body>
+  <div class="form-container">
+        <h2>Patient Information</h2>
+        <form id="userForm">
+            <label for="patientname">Patientname:</label>
+            <input type="text" id="patientname" name="patientname" placeholder="Enter your full name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+           
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" placeholder="Enter your age" min="0" required>
+
+            <label for="contact">Contact Number:</label>
+            <input type="number" id="contact" name="contact" placeholder="Enter your 11-digit contact number" inputmode="numeric" maxlength="11" required>
+
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" placeholder="Enter your address" rows="3" required></textarea>
+
+            <label for="service">Choose a service:</label>
+            <select id="service" name="service" required>
+                <option value="">Please choose an option</option>
+                <option value="prenatal">Pre-natal</option>
+                <option value="checkup">Check-up</option>
+                <option value="bloodtest">Immunization</option>
+                <option value="tb">TB DOTS treatment</option>
+                <option value="consultation">Regular consultation</option>
+                <option value="immunize">Immunize</option>
+                <option value="familyplanning">Family Planning</option>
+                <option value="others">Others</option>
+            </select>
+
+            <button type="button" onclick="window.location.href='User.html'" >Back</button>
+            <button type="submit">Submit</button>
+        </form>
+  </div>
+
+  <!-- Embedded XML snippet (does not interfere with the form) -->
+  <script type="text/xml" id="serviceData">
+    <services>
+        <service id="prenatal" description="Pre-natal checkup and care"/>
+        <service id="checkup" description="General health check-up"/>
+        <service id="bloodtest" description="Blood tests and immunization"/>
+        <service id="tb" description="TB DOTS treatment"/>
+        <service id="consultation" description="Regular consultation"/>
+        <service id="immunize" description="Immunization"/>
+        <service id="familyplanning" description="Family Planning"/>
+        <service id="others" description="Other services"/>
+    </services>
+  </script>
+
+  <!-- Link to separate JS file -->
+  <script src="info.js"></script>
+</body>
+</html>
