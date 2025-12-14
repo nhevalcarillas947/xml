@@ -20,7 +20,7 @@
             <input type="number" id="age" name="age" placeholder="Enter your age" min="0" required>
 
             <label for="contact">Contact Number:</label>
-            <input type="number" id="contact" name="contact" placeholder="Enter your 11-digit contact number" inputmode="numeric" maxlength="11" required>
+            <input type="tel" id="contact" name="contact" placeholder="Enter your 11-digit contact number" pattern="[0-9]{11}" maxlength="11" required>
 
             <label for="address">Address:</label>
             <textarea id="address" name="address" placeholder="Enter your address" rows="3" required></textarea>
@@ -28,32 +28,26 @@
             <label for="service">Choose a service:</label>
             <select id="service" name="service" required>
                 <option value="">Please choose an option</option>
-                <option value="prenatal">Pre-natal</option>
-                <option value="checkup">Check-up</option>
-                <option value="bloodtest">Immunization</option>
-                <option value="tb">TB DOTS treatment</option>
-                <option value="consultation">Regular consultation</option>
-                <option value="immunize">Immunize</option>
-                <option value="familyplanning">Family Planning</option>
-                <option value="others">Others</option>
+                <!-- Services will be loaded from XML -->
             </select>
 
-            <button type="button" id="backButton">Back</button>
-            <button type="submit">Submit</button>
+            <div class="button-container">
+                <button type="button" id="backButton">Back</button>
+                <button type="submit">Submit</button>
+            </div>
         </form>
-  </div>
+  </div> 
 
-  <!-- Embedded XML snippet (does not interfere with the form) -->
-  <script type="text/xml" id="serviceData">
+  <!-- XML data embedded in the page -->
+  <script type="application/xml" id="xmlServices">
     <services>
-        <service id="prenatal" description="Pre-natal checkup and care"/>
-        <service id="checkup" description="General health check-up"/>
-        <service id="bloodtest" description="Blood tests and immunization"/>
-        <service id="tb" description="TB DOTS treatment"/>
-        <service id="consultation" description="Regular consultation"/>
-        <service id="immunize" description="Immunization"/>
-        <service id="familyplanning" description="Family Planning"/>
-        <service id="others" description="Other services"/>
+        <service id="prenatal" name="Pre-natal" />
+        <service id="checkup" name="Check-up" />
+        <service id="immunization" name="Immunization" />
+        <service id="tb" name="TB DOTS treatment" />
+        <service id="consultation" name="Regular consultation" />
+        <service id="familyplanning" name="Family Planning" />
+        <service id="others" name="Others" />
     </services>
   </script>
 
