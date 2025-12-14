@@ -1,25 +1,39 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Admin Dashboard – Barangay Paknaan Health Center</title>
-        <link rel="stylesheet" href="admin.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-       
-    </head>
-    <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – Barangay Paknaan Health Center</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Simple alert and redirect - no overlay needed */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Hidden by default, shown only when authenticated */
+        .admin-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Content (hidden by default, shown only when authenticated) -->
+    <div id="adminContent" class="admin-content">
         <div class="header">
             <div class="header-content">
                 <div>
-                    <h1><i class="fas fa-clinic-medical"></i> Barangay Paknaan Health Center</h1>
+                    <h1><i class="fas fa-clinic-medical"></i> Paknaan Health Center</h1>
                     <div class="subtitle">Administrator Dashboard – Patient Records Management</div>
                 </div>
                 
                 <div class="admin-info">
-                    <div class="admin-avatar">A</div>
+                    <div class="admin-avatar" id="adminInitial">A</div>
                     <div class="admin-details">
-                        <h3>Administrator</h3>
+                        <h3 id="adminName">Administrator</h3>
                         <p>Health Center Management</p>
                     </div>
                 </div>
@@ -74,12 +88,6 @@
                         <h2><i class="fas fa-user-injured"></i> Patient Appointment Requests</h2>
                         <div class="search-filter">
                             <input type="text" class="search-box" id="searchInput" placeholder="Search patients...">
-                            
-                            
-                            
-                            </button>
-                        
-                            </button>
                         </div>
                     </div>
 
@@ -164,7 +172,7 @@
                     </div>
                     <div style="display: flex; gap: 15px;">
                         <button class="btn btn-reject" style="flex: 1;" id="cancelScheduleBtn">
-                           
+                            Cancel
                         </button>
                         <button class="btn btn-approve" style="flex: 1;" id="confirmScheduleBtn">
                             <i class="fas fa-check"></i> Confirm Schedule
@@ -186,8 +194,52 @@
                 </div>
             </div>
         </div>
+    </div>
+</body>
+<script>
+// ============================================
+// IMMEDIATE SESSION VALIDATION
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    checkAdminAccess();
+});
 
-       
-    </body>
-    <script src="admin.js"></script>
-    </html>
+function checkAdminAccess() {
+    // Check if user is logged in and is an admin
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    const userType = sessionStorage.getItem('userType');
+    
+    if (!isLoggedIn || userType !== 'admin') {
+        // Show alert and redirect
+        alert("Please login as administrator");
+        
+        // Clear any existing session data
+        sessionStorage.clear();
+        
+        // Redirect to login page immediately
+        window.location.href = 'login.html';
+    } else {
+        // Show admin content
+        document.getElementById('adminContent').style.display = 'block';
+        
+        // Update admin info in header
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            document.getElementById('adminName').textContent = username;
+            document.getElementById('adminInitial').textContent = username.charAt(0).toUpperCase();
+        }
+    }
+}
+
+function logout() {
+    if (confirm("Are you sure you want to log out?")) {
+        // Redirect immediately WITHOUT clearing sessionStorage first
+        // This prevents the checkAdminSession() from being triggered
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+        return false; // Prevent any further execution
+    }
+}
+</script>
+<script src="admin.js"></script>
+</html>

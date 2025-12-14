@@ -6,336 +6,397 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Barangay Paknaan Health Center - Our Services</title>
     <link rel="stylesheet" href="User.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .user-content {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
-    <div id="modalBox" style="background:white; padding:20px; border-radius:8px; max-width:400px; width:90%; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
-        <p id="modalMessage" style="margin-bottom:20px; font-size:16px;"></p>
-        <div style="display:flex; justify-content:center; gap:10px;">
-            <button id="modalConfirm" style="background-color:#1a73e8;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">Yes</button>
-            <button id="modalCancel" style="background-color:#ccc;color:black;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">No</button>
+    <div id="userContent" class="user-content">
+        <!-- Modal System -->
+        <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+            <div id="modalBox" style="background:white; padding:20px; border-radius:8px; max-width:400px; width:90%; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+                <p id="modalMessage" style="margin-bottom:20px; font-size:16px;"></p>
+                <div style="display:flex; justify-content:center; gap:10px;">
+                    <button id="modalConfirm" style="background-color:#1a73e8;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">Yes</button>
+                    <button id="modalCancel" style="background-color:#ccc;color:black;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">No</button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-    <!-- Sticky Header -->
-    <div class="header">
-        <div class="header-content">
-            <h1><i class="fas fa-clinic-medical"></i> Barangay Paknaan Health Center</h1>
-            <div class="location">Plaridel St., Barangay Paknaan, Mandaue City, Cebu</div>
-            <div class="tagline" id="dynamicTagline">"Your Partner in Community Health and Wellness"</div>
-          <div style="display: flex; justify-content: flex-end; gap: 10px;">
-    <button onclick="book()" 
-            style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Book an Appointment</span>
-    </button>
-      <button onclick="inbox()" 
-        style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
-    <i class="fas fa-calendar-alt"></i>
-    <span>Inbox</span>
-</button>
 
+        <!-- Sticky Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-clinic-medical"></i> Paknaan Health Center</h1>
+                <div class="location">Plaridel St., Barangay Paknaan, Mandaue City, Cebu</div>
+                <div class="tagline" id="dynamicTagline">"Your Partner in Community Health and Wellness"</div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button onclick="book()" 
+                            style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Book an Appointment</span>
+                    </button>
+                    <button onclick="inbox()" 
+                            style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                        <i class="fas fa-inbox"></i>
+                        <span>Inbox</span>
+                    </button>
+                    <button onclick="logout()" 
+                            style="background-color: blue; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Log Out</span>
+                    </button>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="main-nav">
+                    <div class="nav-grid">
+                        <a href="user.html" class="nav-item services">
+                            <i class="fas fa-stethoscope"></i>
+                            <h3>Our Services</h3>
+                            <p>View all health services</p>
+                        </a>
+                        
+                        <a href="ope.html" class="nav-item hours">
+                            <i class="fas fa-clock"></i>
+                            <h3>Operating Hours</h3>
+                            <p>View schedule</p>
+                        </a>
+                        
+                        <a href="loc.html" class="nav-item location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h3>Our Location</h3>
+                            <p>Find our health center</p>
+                        </a>
+                        
+                        <a href="emer.html" class="nav-item emergency">
+                            <i class="fas fa-ambulance"></i>
+                            <h3>Emergency Contact</h3>
+                            <p>Immediate assistance</p>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
 
-    <button onclick="logout()" 
-            style="background-color: blue; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Log Out</span>
-    </button>
-</div>
-            <!-- Navigation -->
-            <nav class="main-nav">
-                <div class="nav-grid">
-                    <a href="user.html" class="nav-item services">
-                        <i class="fas fa-stethoscope"></i>
-                        <h3>Our Services</h3>
-                        <p>View all health services</p>
-                    </a>
-                    
-                    <a href="ope.html" class="nav-item hours">
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title"><i class="fas fa-stethoscope"></i> Comprehensive Health Services</h2>
+                    <p class="page-subtitle">Barangay Paknaan Health Center provides a wide range of medical services to serve our community. All services are offered free of charge to registered residents.</p>
+                </div>
+                
+                <div class="services-grid">
+                    <!-- All service cards remain exactly the same -->
+                    <div class="service-card prenatal">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-baby"></i>
+                            </div>
+                            <div>
+                                <h3>Prenatal & Maternal Care</h3>
+                                <p class="service-description">Comprehensive care for expectant mothers from conception to postpartum with regular monitoring and nutritional support.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Regular prenatal check-ups and monitoring</li>
+                            <li>Nutritional counseling for pregnant women</li>
+                            <li>Tetanus toxoid immunization</li>
+                            <li>Postpartum care and family planning</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>Schedule:</strong> Monday & Thursday, 8:00 AM - 3:00 PM
+                        </div>
+                    </div>
+
+                    <div class="service-card immunization">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-syringe"></i>
+                            </div>
+                            <div>
+                                <h3>Immunization Program</h3>
+                                <p class="service-description">Complete vaccination schedule for infants, children, and adults to prevent various diseases.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>BCG vaccine (against tuberculosis)</li>
+                            <li>PENTA vaccine (DPT-HepB-Hib)</li>
+                            <li>Measles, Mumps, Rubella (MMR) vaccine</li>
+                            <li>COVID-19 vaccines and boosters</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>Immunization Days:</strong> Every Wednesday, 8:00 AM - 4:00 PM
+                        </div>
+                    </div>
+
+                    <div class="service-card tb">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-lungs"></i>
+                            </div>
+                            <div>
+                                <h3>TB-DOTS Program</h3>
+                                <p class="service-description">Directly Observed Treatment Short-course for tuberculosis with full support and monitoring.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Sputum microscopy for TB diagnosis</li>
+                            <li>Free anti-TB medications (6-8 months)</li>
+                            <li>Daily treatment observation by health workers</li>
+                            <li>Nutritional support for TB patients</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>TB Clinic:</strong> Monday-Friday, 8:00 AM - 5:00 PM
+                        </div>
+                    </div>
+
+                    <div class="service-card lab">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-vial"></i>
+                            </div>
+                            <div>
+                                <h3>Laboratory Services</h3>
+                                <p class="service-description">Basic diagnostic tests to support clinical assessment and early detection of health issues.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Complete Blood Count (CBC)</li>
+                            <li>Urinalysis and fecalysis</li>
+                            <li>Blood glucose testing</li>
+                            <li>Pregnancy testing</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>Lab Hours:</strong> Monday-Friday, 7:00 AM - 12:00 PM
+                        </div>
+                    </div>
+
+                    <div class="service-card women">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-female"></i>
+                            </div>
+                            <div>
+                                <h3>Women's Health Services</h3>
+                                <p class="service-description">Comprehensive healthcare services for women of all ages focusing on preventive care.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Breast examination and education</li>
+                            <li>Cervical cancer screening (Pap smear)</li>
+                            <li>Family planning services and counseling</li>
+                            <li>Reproductive health education</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>Women's Clinic:</strong> Tuesday & Friday, 8:00 AM - 3:00 PM
+                        </div>
+                    </div>
+
+                    <div class="service-card chronic">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <div>
+                                <h3>Chronic Disease Management</h3>
+                                <p class="service-description">Monitoring and management of chronic conditions like hypertension and diabetes.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Regular blood pressure monitoring</li>
+                            <li>Blood sugar testing and diabetes education</li>
+                            <li>Medication management and dispensing</li>
+                            <li>Lifestyle modification counseling</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>Chronic Care Clinic:</strong> Monday & Wednesday, 1:00 PM - 4:00 PM
+                        </div>
+                    </div>
+
+                    <div class="service-card child">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <div>
+                                <h3>Child Health Services</h3>
+                                <p class="service-description">Comprehensive pediatric care from infancy to adolescence with growth monitoring.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Newborn screening and care</li>
+                            <li>Growth monitoring and development assessment</li>
+                            <li>Nutritional assessment and counseling</li>
+                            <li>Deworming program (every 6 months)</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>Well-Child Clinic:</strong> Thursday, 8:00 AM - 12:00 PM
+                        </div>
+                    </div>
+
+                    <div class="service-card dental">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-tooth"></i>
+                            </div>
+                            <div>
+                                <h3>Dental Health Services</h3>
+                                <p class="service-description">Basic dental care for children and adults including preventive treatments.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Oral examination and dental health education</li>
+                            <li>Fluoride treatment for children</li>
+                            <li>Tooth extraction (simple cases)</li>
+                            <li>Oral prophylaxis (cleaning)</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>Dental Clinic:</strong> Monday & Wednesday, 8:00 AM - 12:00 PM
+                        </div>
+                    </div>
+
+                    <div class="service-card mental">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div>
+                                <h3>Mental Health Services</h3>
+                                <p class="service-description">Basic mental health support and counseling services for community members.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Mental health screening and assessment</li>
+                            <li>Counseling for stress and anxiety</li>
+                            <li>Crisis intervention support</li>
+                            <li>Community mental health education</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>By appointment only</strong> - Contact health center to schedule
+                        </div>
+                    </div>
+
+                    <div class="service-card nutrition">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-apple-alt"></i>
+                            </div>
+                            <div>
+                                <h3>Nutrition Services</h3>
+                                <p class="service-description">Nutritional assessment, counseling, and support programs for all ages.</p>
+                            </div>
+                        </div>
+                        <ul class="service-features">
+                            <li>Nutritional status assessment</li>
+                            <li>Dietary counseling for health conditions</li>
+                            <li>Management of undernutrition</li>
+                            <li>Supplemental feeding program</li>
+                        </ul>
+                        <div class="service-schedule">
+                            <strong>Nutrition Clinic:</strong> Friday, 8:00 AM - 12:00 PM
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-header">
+                    <h3><i class="fas fa-hands-helping"></i> Serving Our Community Since 1995</h3>
+                    <p>
+                        Barangay Paknaan Health Center is committed to providing accessible, quality healthcare services to all residents. Our dedicated team works tirelessly to promote health and wellness in our community.
+                    </p>
+                </div>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>General Inquiries: (032) 123-4567</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email: healthcenter@paknaan.gov.ph</span>
+                    </div>
+                    <div class="contact-item">
                         <i class="fas fa-clock"></i>
-                        <h3>Operating Hours</h3>
-                        <p>View schedule</p>
-                    </a>
-                    
-                    <a href="loc.html" class="nav-item location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <h3>Our Location</h3>
-                        <p>Find our health center</p>
-                    </a>
-                    
-                    <a href="emer.html" class="nav-item emergency">
-                        <i class="fas fa-ambulance"></i>
-                        <h3>Emergency Contact</h3>
-                        <p>Immediate assistance</p>
-                    </a>
-                </div>
-            </nav>
-        </div>
-    </div>
-
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="page-content">
-            <div class="page-header">
-                <h2 class="page-title"><i class="fas fa-stethoscope"></i> Comprehensive Health Services</h2>
-                <p class="page-subtitle">Barangay Paknaan Health Center provides a wide range of medical services to serve our community. All services are offered free of charge to registered residents.</p>
-            </div>
-            
-            <div class="services-grid">
-                <!-- Prenatal & Maternal Care -->
-                <div class="service-card prenatal">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-baby"></i>
-                        </div>
-                        <div>
-                            <h3>Prenatal & Maternal Care</h3>
-                            <p class="service-description">Comprehensive care for expectant mothers from conception to postpartum with regular monitoring and nutritional support.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Regular prenatal check-ups and monitoring</li>
-                        <li>Nutritional counseling for pregnant women</li>
-                        <li>Tetanus toxoid immunization</li>
-                        <li>Postpartum care and family planning</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>Schedule:</strong> Monday & Thursday, 8:00 AM - 3:00 PM
+                        <span>Open: Mon-Fri 8AM-5PM | Sat 8AM-12PM</span>
                     </div>
                 </div>
-
-                <!-- Immunization Program -->
-                <div class="service-card immunization">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-syringe"></i>
-                        </div>
-                        <div>
-                            <h3>Immunization Program</h3>
-                            <p class="service-description">Complete vaccination schedule for infants, children, and adults to prevent various diseases.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>BCG vaccine (against tuberculosis)</li>
-                        <li>PENTA vaccine (DPT-HepB-Hib)</li>
-                        <li>Measles, Mumps, Rubella (MMR) vaccine</li>
-                        <li>COVID-19 vaccines and boosters</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>Immunization Days:</strong> Every Wednesday, 8:00 AM - 4:00 PM
-                    </div>
-                </div>
-
-                <!-- TB-DOTS Program -->
-                <div class="service-card tb">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-lungs"></i>
-                        </div>
-                        <div>
-                            <h3>TB-DOTS Program</h3>
-                            <p class="service-description">Directly Observed Treatment Short-course for tuberculosis with full support and monitoring.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Sputum microscopy for TB diagnosis</li>
-                        <li>Free anti-TB medications (6-8 months)</li>
-                        <li>Daily treatment observation by health workers</li>
-                        <li>Nutritional support for TB patients</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>TB Clinic:</strong> Monday-Friday, 8:00 AM - 5:00 PM
-                    </div>
-                </div>
-
-                <!-- Laboratory Services -->
-                <div class="service-card lab">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-vial"></i>
-                        </div>
-                        <div>
-                            <h3>Laboratory Services</h3>
-                            <p class="service-description">Basic diagnostic tests to support clinical assessment and early detection of health issues.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Complete Blood Count (CBC)</li>
-                        <li>Urinalysis and fecalysis</li>
-                        <li>Blood glucose testing</li>
-                        <li>Pregnancy testing</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>Lab Hours:</strong> Monday-Friday, 7:00 AM - 12:00 PM
-                    </div>
-                </div>
-
-                <!-- Women's Health -->
-                <div class="service-card women">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-female"></i>
-                        </div>
-                        <div>
-                            <h3>Women's Health Services</h3>
-                            <p class="service-description">Comprehensive healthcare services for women of all ages focusing on preventive care.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Breast examination and education</li>
-                        <li>Cervical cancer screening (Pap smear)</li>
-                        <li>Family planning services and counseling</li>
-                        <li>Reproductive health education</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>Women's Clinic:</strong> Tuesday & Friday, 8:00 AM - 3:00 PM
-                    </div>
-                </div>
-
-                <!-- Chronic Disease Management -->
-                <div class="service-card chronic">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <div>
-                            <h3>Chronic Disease Management</h3>
-                            <p class="service-description">Monitoring and management of chronic conditions like hypertension and diabetes.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Regular blood pressure monitoring</li>
-                        <li>Blood sugar testing and diabetes education</li>
-                        <li>Medication management and dispensing</li>
-                        <li>Lifestyle modification counseling</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>Chronic Care Clinic:</strong> Monday & Wednesday, 1:00 PM - 4:00 PM
-                    </div>
-                </div>
-
-                <!-- Child Health Services -->
-                <div class="service-card child">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-child"></i>
-                        </div>
-                        <div>
-                            <h3>Child Health Services</h3>
-                            <p class="service-description">Comprehensive pediatric care from infancy to adolescence with growth monitoring.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Newborn screening and care</li>
-                        <li>Growth monitoring and development assessment</li>
-                        <li>Nutritional assessment and counseling</li>
-                        <li>Deworming program (every 6 months)</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>Well-Child Clinic:</strong> Thursday, 8:00 AM - 12:00 PM
-                    </div>
-                </div>
-
-                <!-- Dental Services -->
-                <div class="service-card dental">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-tooth"></i>
-                        </div>
-                        <div>
-                            <h3>Dental Health Services</h3>
-                            <p class="service-description">Basic dental care for children and adults including preventive treatments.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Oral examination and dental health education</li>
-                        <li>Fluoride treatment for children</li>
-                        <li>Tooth extraction (simple cases)</li>
-                        <li>Oral prophylaxis (cleaning)</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>Dental Clinic:</strong> Monday & Wednesday, 8:00 AM - 12:00 PM
-                    </div>
-                </div>
-
-                <!-- Mental Health Services -->
-                <div class="service-card mental">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <div>
-                            <h3>Mental Health Services</h3>
-                            <p class="service-description">Basic mental health support and counseling services for community members.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Mental health screening and assessment</li>
-                        <li>Counseling for stress and anxiety</li>
-                        <li>Crisis intervention support</li>
-                        <li>Community mental health education</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>By appointment only</strong> - Contact health center to schedule
-                    </div>
-                </div>
-
-                <!-- Nutrition Services -->
-                <div class="service-card nutrition">
-                    <div class="service-header">
-                        <div class="service-icon">
-                            <i class="fas fa-apple-alt"></i>
-                        </div>
-                        <div>
-                            <h3>Nutrition Services</h3>
-                            <p class="service-description">Nutritional assessment, counseling, and support programs for all ages.</p>
-                        </div>
-                    </div>
-                    <ul class="service-features">
-                        <li>Nutritional status assessment</li>
-                        <li>Dietary counseling for health conditions</li>
-                        <li>Management of undernutrition</li>
-                        <li>Supplemental feeding program</li>
-                    </ul>
-                    <div class="service-schedule">
-                        <strong>Nutrition Clinic:</strong> Friday, 8:00 AM - 12:00 PM
-                    </div>
+                
+                <div class="copyright">
+                    © 2023 Barangay Paknaan Health Center. All rights reserved. | "Your Health, Our Priority" | Mandaue City, Cebu, Philippines
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <div class="footer-content">
-            <div class="footer-header">
-                <h3><i class="fas fa-hands-helping"></i> Serving Our Community Since 1995</h3>
-                <p>
-                    Barangay Paknaan Health Center is committed to providing accessible, quality healthcare services to all residents. Our dedicated team works tirelessly to promote health and wellness in our community.
-                </p>
-            </div>
-            
-            <div class="contact-info">
-                <div class="contact-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>General Inquiries: (032) 123-4567</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>Email: healthcenter@paknaan.gov.ph</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Open: Mon-Fri 8AM-5PM | Sat 8AM-12PM</span>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                © 2023 Barangay Paknaan Health Center. All rights reserved. | "Your Health, Our Priority" | Mandaue City, Cebu, Philippines
-            </div>
-        </div>
-    </div>
+    <script>
+// ============================================
+// IMMEDIATE SESSION VALIDATION FOR USERS - FIXED VERSION
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    checkUserAccess();
+});
+
+function checkUserAccess() {
+    // Check if user is logged in and is a regular user (not admin)
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    const userType = sessionStorage.getItem('userType');
+    
+    if (!isLoggedIn || userType !== 'user') {
+        alert("Please login to access this page");
+        
+        // Clear any existing session data
+        sessionStorage.clear();
+        localStorage.removeItem('loggedInUser');
+        localStorage.removeItem('userEmail');
+        
+        // Redirect to login page
+        window.location.href = 'login.html';
+    } else {
+        // Show user content
+        document.getElementById('userContent').style.display = 'block';
+        
+        // Store email if not already stored
+        if (!sessionStorage.getItem('email')) {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                try {
+                    const userObj = JSON.parse(loggedInUser);
+                    if (userObj.email) {
+                        sessionStorage.setItem('email', userObj.email);
+                    }
+                } catch (e) {
+                    console.error("Error parsing loggedInUser:", e);
+                }
+            }
+        }
+    }
+}
+
+function logout() {
+    if (confirm("Are you sure you want to log out?")) {
+        // Clear all session data
+        sessionStorage.clear();
+        localStorage.removeItem('loggedInUser');
+        localStorage.removeItem('userEmail');
+        
+        // Redirect to login page
+        window.location.href = 'login.html';
+    }
+}
+</script>
 
     <script src="User.js"></script>
 </body>

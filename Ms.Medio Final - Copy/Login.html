@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Barangay Paknaan Health Center</title>
+    <title>Login | Paknaan Health Center</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -234,41 +234,6 @@
             text-decoration: underline;
         }
 
-        .demo-credentials {
-            background-color: rgba(251, 188, 5, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-left: 4px solid var(--accent);
-        }
-
-        .demo-credentials h3 {
-            color: #b38700;
-            font-size: 16px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .demo-credentials ul {
-            list-style-type: none;
-            font-size: 14px;
-            color: var(--gray);
-        }
-
-        .demo-credentials li {
-            padding: 5px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .demo-credentials li i {
-            color: var(--accent);
-            width: 18px;
-        }
-
         .error-message {
             color: var(--danger);
             font-size: 14px;
@@ -357,36 +322,6 @@
         .shake {
             animation: shake 0.5s ease-in-out;
         }
-
-        /* Welcome back message */
-        .welcome-back {
-            background-color: rgba(52, 168, 83, 0.1);
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid var(--secondary);
-        }
-
-        .welcome-back.show {
-            display: flex;
-        }
-
-        .welcome-back i {
-            color: var(--secondary);
-            font-size: 18px;
-        }
-
-        .welcome-back span {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        .welcome-back strong {
-            color: var(--secondary);
-        }
     </style>
 </head>
 <body>
@@ -397,7 +332,7 @@
                 <div class="login-icon">
                     <i class="fas fa-clinic-medical"></i>
                 </div>
-                <h1>Barangay Paknaan Health Center</h1>
+                <h1>Paknaan Health Center</h1>
                 <p>Patient & Admin Portal</p>
             </div>
         </div>
@@ -405,12 +340,6 @@
         <!-- Body -->
         <div class="login-body">
             <h2>Account Login</h2>
-            
-            <!-- Welcome back message (hidden by default) -->
-            <div class="welcome-back" id="welcomeBack">
-                <i class="fas fa-info-circle"></i>
-                <span>Welcome back, <strong id="lastUser">User</strong>!</span>
-            </div>
             
             <!-- Login Form -->
             <form id="loginForm">
@@ -469,9 +398,6 @@
             <!-- Footer -->
             <div class="login-footer">
                 <p>Don't have an account? <a href="register.html">Create one now</a></p>
-                <p style="margin-top: 10px; font-size: 13px;">
-                
-                </p>
             </div>
         </div>
     </div>
@@ -487,9 +413,7 @@
             const usernameError = document.getElementById('usernameError');
             const passwordError = document.getElementById('passwordError');
             const loading = document.getElementById('loading');
-            const lastUserSpan = document.getElementById('lastUser');
             
-        
             // Toggle password visibility
             togglePasswordBtn.addEventListener('click', function() {
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -549,14 +473,12 @@
                 await new Promise(resolve => setTimeout(resolve, 800));
                 
                 try {
-                    // Check for admin login
+                    // ==================== ADMIN LOGIN ====================
                     if (username === "admin" && password === "admin123") {
-                        // Store admin session
-                        localStorage.setItem('adminLoggedIn', 'true');
-                        localStorage.setItem('lastLoggedInUser', JSON.stringify({
-                            username: 'admin',
-                            type: 'admin'
-                        }));
+                        // Set admin session in sessionStorage
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        sessionStorage.setItem('userType', 'admin');
+                        sessionStorage.setItem('username', 'admin');
                         
                         // Show success and redirect
                         showSuccessMessage('Admin login successful!');
@@ -566,17 +488,23 @@
                         return;
                     }
                     
-                    // Check for regular user login
+                    // ==================== USER LOGIN ====================
+                    // Get users from localStorage (user registration data)
                     const users = JSON.parse(localStorage.getItem("users")) || [];
-                    const user = users.find(u => u.username === username && u.password === password);
+                    
+                    // Find user by username (case insensitive)
+                    const user = users.find(u => 
+                        u.username.toLowerCase() === username.toLowerCase() && 
+                        u.password === password
+                    );
                     
                     if (user) {
-                        // Store user session
-                        localStorage.setItem("loggedInUser", JSON.stringify(user));
-                        localStorage.setItem('lastLoggedInUser', JSON.stringify({
-                            username: user.username,
-                            type: 'user'
-                        }));
+                        // Set user session in sessionStorage
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        sessionStorage.setItem('userType', 'user');
+                        sessionStorage.setItem('username', user.username);
+                        sessionStorage.setItem('email', user.email || '');
+                        sessionStorage.setItem('fullName', user.fullName || user.username);
                         
                         // Show success and redirect
                         showSuccessMessage('Login successful!');
@@ -606,55 +534,6 @@
                     }, 500);
                 }
             });
-            window.onload = function () {
-    const container = document.getElementById("messageContainer");
-
-    // Get the logged-in user
-    const currentUserData = JSON.parse(localStorage.getItem("loggedInUser")) || null;
-    const currentUsername = currentUserData ? currentUserData.username : "";
-
-    const approved = JSON.parse(localStorage.getItem("approvedPatients")) || [];
-    const userSchedules = approved.filter(appt => appt.patientname === currentUsername);
-
-    if (userSchedules.length === 0) {
-        container.innerHTML = `<p>No messages yet.</p>`;
-        return;
-    }
-
-    userSchedules.forEach((appt) => {
-        const card = document.createElement('div');
-        card.className = 'message-card';
-
-        const avatar = document.createElement('div');
-        avatar.className = 'avatar';
-        avatar.textContent = appt.patientname.charAt(0).toUpperCase();
-
-        const content = document.createElement('div');
-        content.className = 'msg-content';
-        content.innerHTML = `
-            <div class="msg-header">
-                <span>${appt.service} Appointment</span>
-                <span class="timestamp">${appt.approvedDate}</span>
-            </div>
-            <div class="msg-preview">Click to view details</div>
-            <div class="msg-details">
-                <p><strong>Patient:</strong> ${appt.patientname}</p>
-                <p><strong>Date:</strong> ${appt.scheduledDate}</p>
-                <p><strong>Time:</strong> ${appt.scheduledTime}</p>
-                <p><strong>Notes:</strong> ${appt.scheduleNotes || 'No additional notes'}</p>
-            </div>
-        `;
-
-        card.addEventListener('click', () => {
-            const details = content.querySelector('.msg-details');
-            details.style.display = details.style.display === 'none' ? 'block' : 'none';
-        });
-
-        card.appendChild(avatar);
-        card.appendChild(content);
-        container.appendChild(card);
-    });
-};
             
             // Helper functions for messages
             function showSuccessMessage(message) {
@@ -759,6 +638,7 @@
                 usernameInput.focus();
             }
         });
+        
     </script>
 </body>
 </html>
