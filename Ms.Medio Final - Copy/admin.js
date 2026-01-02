@@ -1,6 +1,4 @@
-// ============================================
-// ADMIN SESSION CHECK - FOR EVERY FUNCTION
-// ============================================
+
 function checkAdminSession() {
     const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
     const userType = sessionStorage.getItem('userType');
@@ -13,12 +11,11 @@ function checkAdminSession() {
     }
     return true;
 }
+ (function(){
+            emailjs.init("woy9PXJtsDYmHNawg"); 
+        })();
 
-// ============================================
-// MAIN ADMIN FUNCTIONS
-// ============================================
 
-// Initialize data
 let patients = JSON.parse(localStorage.getItem("patients")) || [];
 let approvedPatients = JSON.parse(localStorage.getItem("approvedPatients")) || [];
 let currentPatientIndex = null;
@@ -31,7 +28,6 @@ const newTodayCountEl = document.getElementById("newTodayCount");
 const searchInput = document.getElementById("searchInput");
 const currentDateEl = document.getElementById("currentDate");
 
-// Set current date
 const today = new Date();
 const todayString = today.toISOString().split('T')[0];
 if (currentDateEl) {
@@ -43,26 +39,25 @@ if (currentDateEl) {
     });
 }
 
-// Load table data
+
 function loadTable() {
     if (!checkAdminSession()) return;
     
     patients = JSON.parse(localStorage.getItem("patients")) || [];
     approvedPatients = JSON.parse(localStorage.getItem("approvedPatients")) || [];
     
-    // Sort patients by newest first
+
     patients.sort((a, b) => {
         const dateA = a.submissionDate || a.date || '';
         const dateB = b.submissionDate || b.date || '';
         return dateB.localeCompare(dateA);
     });
 
-    // Update stats
+
     totalPatientsEl.textContent = patients.length;
     approvedCountEl.textContent = approvedPatients.length;
     pendingCountEl.textContent = patients.length;
 
-    // Count new patients today
     const newTodayCount = patients.filter(p => p.submissionDate === todayString).length;
     newTodayCountEl.textContent = newTodayCount > 0 ? `${newTodayCount} new today` : "";
 
@@ -128,14 +123,14 @@ function loadTable() {
     }
 }
 
-// Truncate text for display
+
 function truncateText(text, maxLength) {
     if (!text) return "";
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
 }
 
-// Format date for display
+
 function formatDate(dateString) {
     if (!dateString) return "Not specified";
     
@@ -164,9 +159,6 @@ function formatDate(dateString) {
     }
 }
 
-// ============================================
-// VIEW ALL APPROVED APPOINTMENTS
-// ============================================
 function viewAllApprovedAppointments() {
     if (!checkAdminSession()) return;
     
@@ -275,9 +267,7 @@ function viewAllApprovedAppointments() {
     document.getElementById("approvedAppointmentsModal").style.display = "flex";
 }
 
-// ============================================
-// EXPORT APPROVED APPOINTMENTS
-// ============================================
+
 function exportApprovedAppointments() {
     if (!checkAdminSession()) return;
     
@@ -312,8 +302,6 @@ function exportApprovedAppointments() {
     
     alert("Approved appointments exported to CSV file successfully!");
 }
-
-// View patient details
 function viewPatient(index) {
     if (!checkAdminSession()) return;
     
@@ -371,42 +359,44 @@ function viewPatient(index) {
     document.getElementById("patientModal").style.display = "flex";
 }
 
-// Approve patient (open schedule modal)
+
 function approvePatient(index) {
     if (!checkAdminSession()) return;
     
     currentPatientIndex = index;
     const patient = patients[index];
     
-    // Set minimum date to today
+
     const today = new Date().toISOString().split('T')[0];
     const scheduleDateInput = document.getElementById("scheduleDate");
     if (scheduleDateInput) {
         scheduleDateInput.setAttribute('min', today);
         
-        // Set default date to tomorrow
+
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         scheduleDateInput.value = tomorrow.toISOString().split('T')[0];
     }
     
-    // Clear previous values
+    
     document.getElementById("scheduleTime").value = "";
     document.getElementById("scheduleNotes").value = "";
     
     document.getElementById("scheduleModal").style.display = "flex";
 }
 
-// Send message to patient's inbox
+
 function sendMessageToPatient(patient, scheduleDate, scheduleTime, scheduleNotes) {
-    // Initialize messages if not exists
+    console.log('Sending message to patient:', patient.patientname, 'at email:', patient.email);
+    
+
     if (!localStorage.getItem("messages")) {
         localStorage.setItem("messages", JSON.stringify([]));
     }
     
     const messages = JSON.parse(localStorage.getItem("messages")) || [];
     
-    // Format date for message
+
     const formattedDate = new Date(scheduleDate).toLocaleDateString('en-US', {
         weekday: 'long',
         month: 'long',
@@ -414,10 +404,10 @@ function sendMessageToPatient(patient, scheduleDate, scheduleTime, scheduleNotes
         year: 'numeric'
     });
     
-    // Create message object
+
     const message = {
         id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-        to: patient.email, // Patient's email
+        to: patient.email, 
         from: "Paknaan Health Center Admin",
         subject: "Appointment Confirmation",
         message: `Dear ${patient.patientname},
@@ -443,16 +433,112 @@ Barangay Paknaan Health Center`,
         }
     };
     
-    // Add message to storage
+    console.log('Created message object:', message);
+    
+
     messages.push(message);
     localStorage.setItem("messages", JSON.stringify(messages));
+    
+    console.log('Message saved to localStorage. Total messages now:', messages.length);
+  
+    sendActualEmail(patient, scheduleDate, scheduleTime, scheduleNotes, formattedDate);
     
     return message;
 }
 
-// Event listeners for schedule modal
+
+function sendActualEmail(patient, scheduleDate, scheduleTime, scheduleNotes, formattedDate) {
+   
+    if (typeof emailjs === 'undefined') {
+        console.warn('EmailJS is not loaded. Email will not be sent.');
+        return;
+    }
+    
+   
+    const templateParams = {
+        to_email: patient.email,
+        to_name: patient.patientname,
+        patient_name: patient.patientname,
+        appointment_date: formattedDate,
+        appointment_time: scheduleTime,
+        service_type: patient.service,
+        additional_notes: scheduleNotes || 'None',
+        patient_contact: patient.contact,
+        patient_age: patient.age
+    };
+    
+
+    emailjs.send('service_o7jhart', 'template_se893u1', templateParams)
+        .then(function(response) {
+            console.log('Email sent successfully!', response.status, response.text);
+          
+            showEmailNotification('success', `Email sent to ${patient.email}`);
+        }, function(error) {
+            console.error('Failed to send email:', error);
+          
+            showEmailNotification('error', `Failed to send email to ${patient.email}. Check console for details.`);
+        });
+}
+
+
+function showEmailNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: ${type === 'success' ? '#34a853' : '#ea4335'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        max-width: 300px;
+    `;
+    
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}" style="font-size: 20px;"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+  
+    if (!document.getElementById('emailNotificationStyles')) {
+        const style = document.createElement('style');
+        style.id = 'emailNotificationStyles';
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 300);
+    }, 5000);
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Confirm schedule button
+    checkAdminAccess();
+    
     const confirmScheduleBtn = document.getElementById("confirmScheduleBtn");
     if (confirmScheduleBtn) {
         confirmScheduleBtn.addEventListener('click', function() {
@@ -474,10 +560,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const patient = patients[currentPatientIndex];
             
-            // Send message to patient's inbox
+        
             sendMessageToPatient(patient, scheduleDate, scheduleTime, scheduleNotes);
-            
-            // Add to approved patients
+     
             approvedPatients.push({
                 ...patient,
                 scheduledDate: scheduleDate,
@@ -500,7 +585,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 day: 'numeric'
             });
             
-            alert(`Appointment scheduled for ${patient.patientname}:\nDate: ${formattedDate}\nTime: ${scheduleTime}\n\nA confirmation message has been sent to ${patient.email}.`);
+            alert(`Appointment scheduled for ${patient.patientname}:
+Date: ${formattedDate}
+Time: ${scheduleTime}
+
+✅ In-app message sent
+📧 Email being sent to ${patient.email}...`);
             
             // Close modal and reload table
             document.getElementById("scheduleModal").style.display = "none";
@@ -561,55 +651,49 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load table on page load
     loadTable();
 });
-// In admin.js - sendMessageToPatient function (should already be there)
-function sendMessageToPatient(patient, scheduleDate, scheduleTime, scheduleNotes) {
-    // Initialize messages if not exists
-    if (!localStorage.getItem("messages")) {
-        localStorage.setItem("messages", JSON.stringify([]));
-    }
+
+function checkAdminAccess() {
+    // Check if user is logged in and is an admin
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    const userType = sessionStorage.getItem('userType');
     
-    const messages = JSON.parse(localStorage.getItem("messages")) || [];
-    
-    // Format date for message
-    const formattedDate = new Date(scheduleDate).toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-    });
-    
-    // Create message object
-    const message = {
-        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-        to: patient.email, // Patient's email
-        from: "Paknaan Health Center Admin",
-        subject: "Appointment Confirmation",
-        message: `Dear ${patient.patientname},
-
-Your appointment has been confirmed with the following details:
-
-Date: ${formattedDate}
-Time: ${scheduleTime}
-Service: ${patient.service}
-${scheduleNotes ? `Notes: ${scheduleNotes}\n` : ''}
-
-Please arrive 15 minutes before your scheduled time. Bring your barangay ID and any previous medical records if applicable.
-
-Thank you,
-Barangay Paknaan Health Center`,
-        timestamp: new Date().toISOString(),
-        read: false,
-        appointmentDetails: {
-            date: scheduleDate,
-            time: scheduleTime,
-            service: patient.service,
-            notes: scheduleNotes
+    if (!isLoggedIn || userType !== 'admin') {
+        // Show alert and redirect
+        alert("Please login as administrator");
+        
+        // Clear any existing session data
+        sessionStorage.clear();
+        
+        // Redirect to login page immediately
+        window.location.href = 'login.html';
+    } else {
+        // Show admin content
+        const adminContent = document.getElementById('adminContent');
+        if (adminContent) {
+            adminContent.style.display = 'block';
+            console.log('Admin content displayed');
+            
+            // Force reflow to ensure proper rendering
+            adminContent.offsetHeight;
+        } else {
+            console.error('Admin content element not found');
         }
-    };
-    
-    // Add message to storage
-    messages.push(message);
-    localStorage.setItem("messages", JSON.stringify(messages));
-    
-    return message;
+        
+        // Update admin info in header
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            document.getElementById('adminName').textContent = username;
+            document.getElementById('adminInitial').textContent = username.charAt(0).toUpperCase();
+        }
+    }
+}
+
+function logout() {
+    if (confirm("Are you sure you want to log out?")) {
+        // Redirect immediately WITHOUT clearing sessionStorage first
+        // This prevents the checkAdminSession() from being triggered
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+        return false; // Prevent any further execution
+    }
 }

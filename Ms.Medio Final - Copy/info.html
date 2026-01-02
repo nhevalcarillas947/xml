@@ -3,55 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Information Form</title>
+    <title>Patient Information Form</title>
     <link rel="stylesheet" href="info.css">
-</head>
+    
+</head> 
 <body>
   <div class="form-container">
-        <h2>Patient Information</h2>
-        <form id="userForm">
-            <label for="patientname">Patientname:</label>
-            <input type="text" id="patientname" name="patientname" placeholder="Enter your full name" required>
+    <h1 class="heading">Patient Information</h1>
+    <form id="userForm">
+      
+      <div class="form-fields">
+        <div class="name-field">
+          <label for="patientname">Patient Name:</label>
+          <input type="text" id="patientname" name="patientname" placeholder="Enter your full name" required="true"/>
+        </div>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-           
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" placeholder="Enter your age" min="0" required>
+        <div class="email-field">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required="true"/>
+        </div>
+       
+        <div class="age-field">
+          <label for="age">Age:</label>
+          <input type="number" id="age" name="age" placeholder="Enter your age" min="0" required="true"/>
+        </div>
 
-            <label for="contact">Contact Number:</label>
-            <input type="tel" id="contact" name="contact" placeholder="Enter your 11-digit contact number" pattern="[0-9]{11}" maxlength="11" required>
+        <div class="contact-field">
+          <label for="contact">Contact Number:</label>
+          <input type="tel" id="contact" name="contact" placeholder="Enter your 11-digit contact number" pattern="[0-9]{11}" maxlength="11" required="true"/>
+        </div>
 
-            <label for="address">Address:</label>
-            <textarea id="address" name="address" placeholder="Enter your address" rows="3" required></textarea>
+        <div class="address-field">
+          <label for="address">Address:</label>
+          <input id="address" name="address" placeholder="Enter your address" rows="3" required="true"></input>
+        </div>
 
-            <label for="service">Choose a service:</label>
-            <select id="service" name="service" required>
-                <option value="">Please choose an option</option>
-                <!-- Services will be loaded from XML -->
-            </select>
+        <div class="service-field">
+          <label for="service">Choose a service:</label>
+          <select id="service" name="service" required="true">
+            <option value="">Please choose an option</option>
+        
+          </select>
+        </div>
+      </div>
 
-            <div class="button-container">
-                <button type="button" id="backButton">Back</button>
-                <button type="submit">Submit</button>
-            </div>
-        </form>
-  </div> 
+      <div class="button-container">
+        <button type="button" id="backButton">Back</button>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
 
-  <!-- XML data embedded in the page -->
-  <script type="application/xml" id="xmlServices">
-    <services>
-        <service id="prenatal" name="Pre-natal" />
-        <service id="checkup" name="Check-up" />
-        <service id="immunization" name="Immunization" />
-        <service id="tb" name="TB DOTS treatment" />
-        <service id="consultation" name="Regular consultation" />
-        <service id="familyplanning" name="Family Planning" />
-        <service id="others" name="Others" />
-    </services>
-  </script>
 
-  <!-- Link to separate JS file -->
+  <!-- Modal for 'Others' option -->
+  <div id="othersModal" class="modal">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h3>Specify Service</h3>
+        <span id="closeModal" class="close-modal">&times;</span>
+      </div>
+      <div>
+        <label for="otherServiceInput">Please specify the service you need:</label>
+        <input type="text" id="otherServiceInput" placeholder="Enter service name">
+        <div style="margin-top: 20px; display: flex; gap: 12px;">
+          <button id="cancelModalBtn">Cancel</button>
+          <button id="confirmModalBtn">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="info.js"></script>
 </body>
 </html>

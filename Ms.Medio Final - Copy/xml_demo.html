@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML to HTML Connection Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        h1, h2, h3 {
+            color: #1a237e;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid #1a73e8;
+            padding-bottom: 15px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .xml-content {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .form-demo {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #1a73e8;
+        }
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            margin-right: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #1a237e;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0d62c9;
+        }
+        .connection-diagram {
+            text-align: center;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .arrow {
+            font-size: 24px;
+            margin: 10px 0;
+            color: #1a73e8;
+        }
+        .file-box {
+            display: inline-block;
+            padding: 15px;
+            margin: 10px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .explanation {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>XML to HTML Connection Demo</h1>
+        
+        <div class="section">
+            <h2>How XML Connects to HTML</h2>
+            <div class="connection-diagram">
+                <div class="file-box">services.xml</div>
+                <div class="arrow">↓</div>
+                <div class="file-box">info.js (JavaScript)</div>
+                <div class="arrow">↓</div>
+                <div class="file-box">info.html</div>
+            </div>
+            <p>This diagram shows how data flows from XML files to the HTML form through JavaScript processing.</p>
+        </div>
+        
+        <div class="section">
+            <h2>1. Services XML File (services.xml)</h2>
+            <p>This XML file contains the service options that populate the dropdown in the form:</p>
+            <div id="servicesXmlContent" class="xml-content">Loading services.xml...</div>
+        </div>
+        
+        <div class="section">
+            <h2>2. Form Structure XML File (info.xml)</h2>
+            <p>This XML file defines the structure of the patient information form:</p>
+            <div id="infoXmlContent" class="xml-content">Loading info.xml...</div>
+        </div>
+        
+        <div class="section">
+            <h2>3. HTML Form Demo</h2>
+            <p>This form demonstrates how XML data is used in the actual HTML interface:</p>
+            <div class="form-demo">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="demoName">Patient Name:</label>
+                        <input type="text" id="demoName" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="demoEmail">Email:</label>
+                        <input type="email" id="demoEmail" placeholder="Enter your email">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="demoAge">Age:</label>
+                        <input type="number" id="demoAge" placeholder="Enter your age" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="demoContact">Contact Number:</label>
+                        <input type="tel" id="demoContact" placeholder="Enter your 11-digit contact number">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="demoAddress">Address:</label>
+                        <input type="text" id="demoAddress" placeholder="Enter your address">
+                    </div>
+                    <div class="form-group">
+                        <label for="demoService">Choose a service:</label>
+                        <select id="demoService">
+                            <option value="">Please choose an option</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="button" onclick="alert('Form would be submitted in the real application!')">Submit</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>How It Works</h2>
+            <div class="explanation">
+                <h3>Connection Process:</h3>
+                <ol>
+                    <li><strong>XML Data Storage:</strong> Service options are stored in <code>services.xml</code></li>
+                    <li><strong>JavaScript Loading:</strong> The <code>info.js</code> file uses <code>fetch()</code> to load the XML data</li>
+                    <li><strong>Data Parsing:</strong> JavaScript parses the XML using <code>DOMParser</code></li>
+                    <li><strong>Dynamic Population:</strong> JavaScript dynamically populates the HTML form with data from XML</li>
+                    <li><strong>User Interaction:</strong> Users interact with the HTML form, which is powered by XML data</li>
+                </ol>
+                <p>This approach separates data from presentation, making it easier to update services without changing HTML code.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load and display services.xml content
+        fetch('services.xml')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('servicesXmlContent').textContent = data;
+                
+                // Parse XML and populate demo form
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data, "text/xml");
+                const services = xmlDoc.getElementsByTagName('service');
+                
+                const select = document.getElementById('demoService');
+                for (let i = 0; i < services.length; i++) {
+                    const service = services[i];
+                    const option = document.createElement('option');
+                    option.value = service.getAttribute('id');
+                    option.textContent = service.getAttribute('name');
+                    select.appendChild(option);
+                }
+            })
+            .catch(error => {
+                document.getElementById('servicesXmlContent').textContent = 'Error loading services.xml: ' + error.message;
+            });
+        
+        // Load and display info.xml content
+        fetch('info.xml')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('infoXmlContent').textContent = data;
+            })
+            .catch(error => {
+                document.getElementById('infoXmlContent').textContent = 'Error loading info.xml: ' + error.message;
+            });
+    </script>
+</body>
+</html>

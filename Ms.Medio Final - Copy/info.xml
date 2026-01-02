@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+  <service id="prenatal" name="Pre-natal"/>
+  <service id="checkup" name="Check-up"/>
+  <service id="immunization" name="Immunization"/>
+  <service id="tb" name="TB DOTS treatment"/>
+  <service id="consultation" name="Regular consultation"/>
+  <service id="familyplanning" name="Family Planning"/>
+  <service id="others" name="Others"/>
+</services>

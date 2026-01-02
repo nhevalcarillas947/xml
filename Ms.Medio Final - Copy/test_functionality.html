@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Info Functionality</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #1a237e;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .xml-display {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #1a73e8;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0d62c9;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Info.html and Info.xml Functionality Test</h1>
+        
+        <div class="section">
+            <h2>1. Info.html Form</h2>
+            <p>This is the patient information form that users fill out:</p>
+            <iframe src="info.html" width="100%" height="600px" style="border: 1px solid #ccc;"></iframe>
+        </div>
+        
+        <div class="section">
+            <h2>2. Services.xml Data</h2>
+            <p>This XML file contains the service options loaded by the form:</p>
+            <div class="xml-display" id="xmlContent">Loading XML content...</div>
+        </div>
+        
+        <div class="section">
+            <h2>3. Info.xml Structure</h2>
+            <p>This XML file defines the structure of the patient information form:</p>
+            <div class="xml-display" id="infoXmlContent">Loading info.xml content...</div>
+        </div>
+        
+        <div class="section">
+            <h2>4. Test Results</h2>
+            <button onclick="testFunctionality()">Run Functionality Test</button>
+            <div id="testResults"></div>
+        </div>
+    </div>
+
+    <script>
+        // Load and display XML content
+        window.addEventListener('load', function() {
+            // Load services.xml
+            fetch('services.xml')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('xmlContent').textContent = data;
+                })
+                .catch(error => {
+                    document.getElementById('xmlContent').textContent = 'Error loading services.xml: ' + error.message;
+                });
+            
+            // Load info.xml
+            fetch('info.xml')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('infoXmlContent').textContent = data;
+                })
+                .catch(error => {
+                    document.getElementById('infoXmlContent').textContent = 'Error loading info.xml: ' + error.message;
+                });
+        });
+        
+        function testFunctionality() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '';
+            
+            // Test 1: Check if services.xml exists and is valid
+            fetch('services.xml')
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                })
+                .then(data => {
+                    // Try to parse as XML
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(data, "text/xml");
+                    
+                    if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+                        throw new Error('Invalid XML format');
+                    }
+                    
+                    const services = xmlDoc.getElementsByTagName('service');
+                    addResult(resultsDiv, 'success', `✓ services.xml loaded successfully with ${services.length} services`);
+                    
+                    // Test 2: Check if info.xml exists and is valid
+                    return fetch('info.xml');
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                })
+                .then(data => {
+                    // Try to parse as XML
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(data, "text/xml");
+                    
+                    if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+                        throw new Error('Invalid XML format');
+                    }
+                    
+                    addResult(resultsDiv, 'success', '✓ info.xml loaded and parsed successfully');
+                    
+                    // Test 3: Check if info.html exists
+                    return fetch('info.html');
+                })
+                .then(response => {
+                    if (response.ok) {
+                        addResult(resultsDiv, 'success', '✓ info.html loaded successfully');
+                        addResult(resultsDiv, 'success', '🎉 All functionality tests passed!');
+                    } else {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                })
+                .catch(error => {
+                    addResult(resultsDiv, 'error', '✗ Test failed: ' + error.message);
+                });
+        }
+        
+        function addResult(container, type, message) {
+            const div = document.createElement('div');
+            div.className = 'status ' + type;
+            div.textContent = message;
+            container.appendChild(div);
+        }
+    </script>
+</body>
+</html>

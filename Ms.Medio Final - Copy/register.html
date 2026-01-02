@@ -201,6 +201,15 @@
                     </div>
                 </div>
 
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter email address" required>
+                    <div class="error-message" id="emailError">
+                        Please enter a valid email address
+                    </div>
+                </div>
+
                 <!-- Password -->
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -253,11 +262,13 @@
 
             // Get values
             const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value;
             const confirmPassword = document.getElementById("confirmPassword").value;
 
             // Clear previous errors
             document.getElementById("usernameError").classList.remove("show");
+            document.getElementById("emailError").classList.remove("show");
             document.getElementById("passwordError").classList.remove("show");
             document.getElementById("confirmPasswordError").classList.remove("show");
 
@@ -268,6 +279,13 @@
             if (username.length < 3) {
                 document.getElementById("usernameError").textContent = "Username must be at least 3 characters";
                 document.getElementById("usernameError").classList.add("show");
+                isValid = false;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById("emailError").classList.add("show");
                 isValid = false;
             }
 
@@ -285,26 +303,34 @@
 
             if (!isValid) return;
 
-            // Check if username exists
+            // Check if username or email exists
             const users = JSON.parse(localStorage.getItem("users")) || [];
-            const exists = users.some(u => u.username === username);
+            const usernameExists = users.some(u => u.username === username);
+            const emailExists = users.some(u => u.email === email);
             
-            if(exists){
+            if(usernameExists){
                 document.getElementById("usernameError").textContent = "Username already exists!";
                 document.getElementById("usernameError").classList.add("show");
+                return;
+            }
+
+            if(emailExists){
+                document.getElementById("emailError").textContent = "Email already registered!";
+                document.getElementById("emailError").classList.add("show");
                 return;
             }
 
             // Add user
             users.push({ 
                 username, 
+                email,
                 password,
                 registeredAt: new Date().toISOString()
             });
             localStorage.setItem("users", JSON.stringify(users));
 
             // Show success and redirect
-            alert("Registration successful!");
+            alert("Registration successful! You can now login with your credentials.");
             window.location.href = "login.html";
         });
 
@@ -330,6 +356,19 @@
             
             if (username.length < 3 && username.length > 0) {
                 errorElement.textContent = "Username must be at least 3 characters";
+                errorElement.classList.add("show");
+            } else {
+                errorElement.classList.remove("show");
+            }
+        });
+
+        document.getElementById("email").addEventListener("input", function() {
+            const email = this.value.trim();
+            const errorElement = document.getElementById("emailError");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email.length > 0 && !emailRegex.test(email)) {
+                errorElement.textContent = "Please enter a valid email address";
                 errorElement.classList.add("show");
             } else {
                 errorElement.classList.remove("show");

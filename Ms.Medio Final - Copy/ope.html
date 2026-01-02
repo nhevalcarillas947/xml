@@ -20,31 +20,38 @@
     <!-- Sticky Header -->
     <div class="header">
         <div class="header-content">
-            <h1><i class="fas fa-clinic-medical"></i> Barangay Paknaan Health Center</h1>
+            <h1><i class="fas fa-clinic-medical"></i> Paknaan Health Center</h1>
             <div class="location">Plaridel St., Barangay Paknaan, Mandaue City, Cebu</div>
             <div class="tagline" id="dynamicTagline">"Your Partner in Community Health and Wellness"</div>
-           <div style="display: flex; justify-content: flex-end; gap: 10px;">
-    <button onclick="book()" 
-            style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Book an Appointment</span>
-    </button>
-     <button onclick="inbox()" 
-        style="background-color: red; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
-    <i class="fas fa-calendar-alt"></i>
-    <span>Inbox</span>
-</button>
-
-    <button onclick="logout()" 
-            style="background-color: blue; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Log Out</span>
-    </button>
-</div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                    <button onclick="book()" 
+                            style="background-color: #34a853; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" 
+                            onmouseover="this.style.backgroundColor='#2e8b47'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';" 
+                            onmouseout="this.style.backgroundColor='#34a853'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Book Appointment</span>
+                    </button>
+                    <button onclick="inbox()" 
+                            id="inboxButton"
+                            style="background-color: #1a73e8; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative;" 
+                            onmouseover="this.style.backgroundColor='#0d62c9'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';" 
+                            onmouseout="this.style.backgroundColor='#1a73e8'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
+                        <i class="fas fa-inbox"></i>
+                        <span>Inbox</span>
+                        <span id="inboxBadge" style="display: none; position: absolute; top: -6px; right: -6px; background-color: #ea4335; color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 11px; font-weight: bold; display: none; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></span>
+                    </button>
+                    <button onclick="logout()" 
+                            style="background-color: #5f6368; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" 
+                            onmouseover="this.style.backgroundColor='#3c4043'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';" 
+                            onmouseout="this.style.backgroundColor='#5f6368'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Log Out</span>
+                    </button>
+                </div>
             <!-- Navigation -->
           <nav class="main-nav">
                 <div class="nav-grid">
-                    <a href="user.html" class="nav-item services">
+                    <a href="User.html" class="nav-item services">
                         <i class="fas fa-stethoscope"></i>
                         <h3>Our Services</h3>
                         <p>View all health services</p>
@@ -131,10 +138,9 @@
     <div class="footer">
         <div class="footer-content">
             <div class="footer-header">
-                <h3><i class="fas fa-hands-helping"></i> Serving Our Community Since 1995</h3>
+                <h3><i class="fas fa-hands-helping"></i>About Us</h3>
                 <p>
-                    Barangay Paknaan Health Center is committed to providing accessible, quality healthcare services to all residents. Our dedicated team works tirelessly to promote health and wellness in our community.
-                </p>
+                   Health centers provide essential healthcare services to promote the well-being of individuals and the community. These services focus on the prevention, diagnosis, and basic treatment of common health conditions. Health centers serve as the first point of contact for patients seeking medical care. Common services offered by a health center include medical consultations, basic check-ups, maternal and child healthcare, immunization services, family planning, and treatment of minor illnesses. Health centers also provide health education and preventive programs to help individuals maintain a healthy lifestyle and prevent disease.
             </div>
             
             <div class="contact-info">

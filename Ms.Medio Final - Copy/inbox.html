@@ -35,14 +35,17 @@
     .message-card {
         background: white;
         border-radius: 10px;
-        padding: 15px;
+        padding: 20px;
         margin-bottom: 15px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         cursor: pointer;
-        transition: 0.2s;
+        transition: all 0.3s ease;
+        border-left: 4px solid #1a73e8;
     }
     .message-card:hover {
         background: #f0f8ff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
     }
     .msg-header {
         display: flex;
@@ -98,42 +101,148 @@
 window.onload = function () {
     const container = document.getElementById("messageContainer");
 
-    // Load approved schedules from localStorage
-    const approved = JSON.parse(localStorage.getItem("approvedPatients")) || [];
+    // Get the current logged-in user's email
+    const userEmail = getUserEmail();
+    
+    if (!userEmail) {
+        container.innerHTML = `<p style="color: red;">Please login to view messages.</p>`;
+        return;
+    }
+    
+    console.log('Filtering messages for email:', userEmail);
 
-    if (approved.length === 0) {
-        container.innerHTML = `<p>No messages yet.</p>`;
+    // Load messages from localStorage
+    const messages = JSON.parse(localStorage.getItem("messages")) || [];
+    console.log('Total messages in localStorage:', messages.length);
+    
+    // Filter messages for current user only
+    const userMessages = messages.filter(msg => msg.to === userEmail);
+    console.log('Filtered messages for user:', userMessages.length);
+    
+    // Sort messages by newest first
+    userMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    if (userMessages.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <i class="fas fa-envelope-open" style="font-size: 60px; margin-bottom: 20px; opacity: 0.3;"></i>
+                <p style="font-size: 18px; margin-bottom: 10px;">No messages yet</p>
+                <p>Your appointment confirmations will appear here once scheduled.</p>
+            </div>
+        `;
         return;
     }
 
-    approved.forEach((appt, index) => {
+    userMessages.forEach((msg, index) => {
         // Create message card element
         const card = document.createElement('div');
         card.className = 'message-card';
+        
+        // Format timestamp
+        const msgDate = new Date(msg.timestamp);
+        const formattedDate = msgDate.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        });
+        const formattedTime = msgDate.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
 
         card.innerHTML = `
             <div class="msg-header">
-                <span>${appt.service} Appointment</span>
-                <span class="timestamp">${appt.approvedDate}</span>
+                <span><i class="fas fa-hospital"></i> ${msg.subject || 'Health Center Notification'}</span>
+                <span class="timestamp">${formattedDate} ${formattedTime}</span>
             </div>
-            <div class="msg-preview">${appt.patientname} – Click to view details</div>
+            <div class="msg-preview">From: ${msg.from} – Click to view details</div>
             <div class="msg-details">
-                <p><strong>Patient:</strong> ${appt.patientname}</p>
-                <p><strong>Date:</strong> ${appt.scheduledDate}</p>
-                <p><strong>Time:</strong> ${appt.scheduledTime}</p>
-                <p><strong>Notes:</strong> ${appt.scheduleNotes || 'No additional notes'}</p>
+                <p><strong>From:</strong> ${msg.from}</p>
+                <p><strong>Subject:</strong> ${msg.subject}</p>
+                <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 6px; white-space: pre-line;">
+                    ${msg.message}
+                </div>
+                ${msg.appointmentDetails ? `
+                    <div style="margin-top: 15px; padding: 15px; background: #d4edda; border-radius: 6px; border-left: 4px solid #28a745;">
+                        <p style="font-weight: bold; margin-bottom: 10px;"><i class="fas fa-calendar-check"></i> Appointment Summary:</p>
+                        <p><strong>📅 Date:</strong> ${new Date(msg.appointmentDetails.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                        <p><strong>⏰ Time:</strong> ${msg.appointmentDetails.time}</p>
+                        <p><strong>🏥 Service:</strong> ${msg.appointmentDetails.service}</p>
+                        ${msg.appointmentDetails.notes ? `<p><strong>📝 Notes:</strong> ${msg.appointmentDetails.notes}</p>` : ''}
+                    </div>
+                ` : ''}
             </div>
         `;
 
         // Toggle details visibility on click
         card.addEventListener('click', () => {
             const details = card.querySelector('.msg-details');
-            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+            } else {
+                details.style.display = 'block';
+                
+                // Mark message as read
+                if (!msg.read) {
+                    markMessageAsRead(msg.id);
+                }
+            }
         });
 
         container.appendChild(card);
     });
 };
+
+// Function to get user email
+function getUserEmail() {
+    // Try to get email from multiple sources
+    let email = sessionStorage.getItem('email');
+    
+    if (!email) {
+        email = localStorage.getItem('userEmail');
+    }
+    
+    if (!email) {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (loggedInUser) {
+            try {
+                const userObj = JSON.parse(loggedInUser);
+                email = userObj.email;
+            } catch (e) {
+                console.error("Error parsing loggedInUser:", e);
+            }
+        }
+    }
+    
+    if (!email) {
+        // Try to get from users array using current username
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === username);
+            if (user && user.email) {
+                email = user.email;
+                // Store for future use
+                sessionStorage.setItem('email', user.email);
+                localStorage.setItem('userEmail', user.email);
+            }
+        }
+    }
+    
+    console.log('Retrieved email for inbox filtering:', email);
+    return email;
+}
+
+// Function to mark message as read
+function markMessageAsRead(messageId) {
+    const messages = JSON.parse(localStorage.getItem("messages")) || [];
+    const messageIndex = messages.findIndex(msg => msg.id === messageId);
+    
+    if (messageIndex !== -1) {
+        messages[messageIndex].read = true;
+        localStorage.setItem("messages", JSON.stringify(messages));
+    }
+}
 </script>
 
 </body>

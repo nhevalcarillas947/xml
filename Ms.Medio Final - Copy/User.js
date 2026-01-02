@@ -128,6 +128,20 @@ function getUserEmail() {
         }
     }
     
+    if (!email) {
+        // Try to get from users array using current username
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === username);
+            if (user && user.email) {
+                email = user.email;
+                // Store for future use
+                sessionStorage.setItem('email', user.email);
+            }
+        }
+    }
+    
     return email;
 }
 
@@ -149,21 +163,14 @@ function updateInboxBadge() {
         msg.to === userEmail && !msg.read
     ).length;
     
-    const inboxBtn = document.querySelector('button[onclick="inbox()"]');
-    if (inboxBtn) {
-        let badge = inboxBtn.querySelector('.inbox-badge');
-        if (!badge) {
-            badge = document.createElement('span');
-            badge.className = 'inbox-badge';
-            inboxBtn.style.position = 'relative';
-            inboxBtn.appendChild(badge);
-        }
-        
+    // Update the badge on the inbox button
+    const inboxBadge = document.getElementById('inboxBadge');
+    if (inboxBadge) {
         if (unreadCount > 0) {
-            badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
-            badge.style.display = 'flex';
+            inboxBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+            inboxBadge.style.display = 'flex';
         } else {
-            badge.style.display = 'none';
+            inboxBadge.style.display = 'none';
         }
     }
 }
@@ -171,19 +178,27 @@ function updateInboxBadge() {
 function inbox() {
     if (!checkUserSession()) return;
     
+    console.log('Inbox button clicked'); // Debug log
+    
     // Get user email using the fixed function
     const userEmail = getUserEmail();
+    console.log('User email:', userEmail); // Debug log
+    
     if (!userEmail) {
-        alert("User information not found. Please login again.");
-        window.location.href = 'login.html';
+        alert("Unable to retrieve your email. Please ensure you registered with an email address. If you registered before the update, please re-register.");
         return;
     }
     
     // Get messages from localStorage
     const messages = JSON.parse(localStorage.getItem("messages")) || [];
+    console.log('Total messages in system:', messages.length); // Debug log
+    
+    // Log all messages for debugging
+    console.log('All messages:', JSON.stringify(messages, null, 2));
     
     // Filter messages for current user only
     const userMessages = messages.filter(msg => msg.to === userEmail);
+    console.log('Messages for this user:', userMessages.length); // Debug log
     
     // Sort messages by newest first
     userMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -206,10 +221,24 @@ function createInboxModal(messages, unreadCount, userEmail) {
     const modalOverlay = document.createElement('div');
     modalOverlay.id = 'messageModalOverlay';
     modalOverlay.className = 'message-modal-overlay';
+    modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    `;
     
     // Create modal content
     const modalHTML = `
-        <div class="message-modal">
+        <div class="message-modal" style="animation: slideIn 0.3s ease;">
             <div class="message-modal-header">
                 <h3><i class="fas fa-inbox"></i> Health Center Messages</h3>
                 <button class="close-btn" onclick="closeMessageModal()">&times;</button>
@@ -285,7 +314,7 @@ function createInboxModal(messages, unreadCount, userEmail) {
             
             <div class="message-modal-footer">
                 <button class="close-messages-btn" onclick="closeMessageModal()">
-                    Close Messages
+                    <i class="fas fa-times"></i> Close Messages
                 </button>
             </div>
         </div>
@@ -294,8 +323,25 @@ function createInboxModal(messages, unreadCount, userEmail) {
     modalOverlay.innerHTML = modalHTML;
     document.body.appendChild(modalOverlay);
     
+    // Add click outside to close
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+            closeMessageModal();
+        }
+    });
+    
+    // Prevent modal content clicks from closing
+    const modalContent = modalOverlay.querySelector('.message-modal');
+    if (modalContent) {
+        modalContent.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+    
     // Update badge after opening
     setTimeout(updateInboxBadge, 100);
+    
+    console.log('Inbox modal created and displayed');
 }
 
 function markSingleAsRead(messageId) {
@@ -363,9 +409,14 @@ function markAllAsRead() {
 }
 
 function closeMessageModal() {
+    console.log('Closing inbox modal');
     const messageModal = document.getElementById('messageModalOverlay');
     if (messageModal) {
-        messageModal.remove();
+        // Add fade out animation
+        messageModal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            messageModal.remove();
+        }, 300);
     }
     
     // Update badge when closing
@@ -381,6 +432,19 @@ document.addEventListener('DOMContentLoaded', function() {
     if (userContent && userContent.style.display === 'block') {
         initializeTagline();
         setActiveNav();
+        
+        // Attach inbox button click handler as backup
+        const inboxButton = document.getElementById('inboxButton');
+        if (inboxButton) {
+            console.log('Inbox button found, attaching event listener');
+            // Remove onclick to prevent double triggering
+            inboxButton.removeAttribute('onclick');
+            inboxButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Inbox button clicked via event listener');
+                inbox();
+            });
+        }
         
         // Update inbox badge (with delay to ensure DOM is ready)
         setTimeout(() => {

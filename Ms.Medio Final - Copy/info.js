@@ -1,14 +1,13 @@
-// Function to load services from embedded XML
-function loadServicesFromXML() {
+
+async function loadServicesFromXML() {
     try {
-        // Get the XML from the embedded script tag
-        const xmlElement = document.getElementById('xmlServices');
-        if (!xmlElement) {
-            console.error('XML element not found');
-            return getDefaultServices();
+        // Try to fetch the external XML file
+        const response = await fetch('info.xml');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        const xmlText = xmlElement.textContent;
+        const xmlText = await response.text();
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "text/xml");
         
@@ -21,11 +20,12 @@ function loadServicesFromXML() {
         return xmlDoc;
     } catch (error) {
         console.error('Error loading XML:', error);
+        // Fallback to default services if external XML fails
         return getDefaultServices();
     }
 }
 
-// Function to get default services (fallback)
+
 function getDefaultServices() {
     const defaultXML = `
     <services>
@@ -42,18 +42,16 @@ function getDefaultServices() {
     return parser.parseFromString(defaultXML, "text/xml");
 }
 
-// Function to populate services dropdown from XML
-function populateServices() {
+
+async function populateServices() {
     const serviceSelect = document.getElementById('service');
     
-    // Clear the default "loading" option
     serviceSelect.innerHTML = '<option value="">Please choose an option</option>';
     
     try {
-        const xmlDoc = loadServicesFromXML();
+        const xmlDoc = await loadServicesFromXML();
         const services = xmlDoc.getElementsByTagName('service');
         
-        // Add services from XML
         for (let i = 0; i < services.length; i++) {
             const service = services[i];
             const id = service.getAttribute('id');
@@ -72,7 +70,7 @@ function populateServices() {
     } catch (error) {
         console.error('Error populating services:', error);
         
-        // Add fallback options if XML fails
+        // Fallback to default services
         const fallbackServices = [
             {id: 'prenatal', name: 'Pre-natal'},
             {id: 'checkup', name: 'Check-up'},
@@ -92,38 +90,21 @@ function populateServices() {
     }
 }
 
-// Back button validation - EXACTLY THE SAME AS BEFORE
+
 function setupBackButton() {
     const backButton = document.getElementById('backButton');
     
     if (backButton) {
         backButton.addEventListener('click', function() {
-            // Check if any form field has been filled
-            const patientname = document.getElementById("patientname").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const age = document.getElementById("age").value.trim();
-            const address = document.getElementById("address").value.trim();
-            const service = document.getElementById("service").value;
-            const contact = document.getElementById("contact").value.trim();
-            
-            // Check if any field has data
-            const hasData = patientname || email || age || address || (service && service !== "") || contact;
-            
-            // If form has data, show confirmation alert
-            if (hasData) {
-                const confirmBack = confirm('You have unsaved changes. Are you sure you want to go back?');
-                if (confirmBack) {
-                    window.location.href = 'User.html';
-                }
-            } else {
-                // If no data, proceed directly
-                window.location.href = 'User.html';
+        
+            const confirmBack = confirm('Are you sure you want to go back?');
+            if (confirmBack) {
+                window.location.href = 'User.html'; 
             }
         });
     }
 }
 
-// Form submission - EXACTLY THE SAME AS BEFORE
 function setupFormSubmission() {
     const form = document.getElementById("userForm");
     
@@ -135,16 +116,25 @@ function setupFormSubmission() {
             const email = document.getElementById("email").value;
             const age = document.getElementById("age").value;
             const address = document.getElementById("address").value;
-            const service = document.getElementById("service").value;
+            
+            // Get the selected service
+            const serviceSelect = document.getElementById("service");
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            let service = serviceSelect.value;
+            
+            // If it's a custom service (not from the original XML), use the text content
+            if (selectedOption && selectedOption.getAttribute('data-custom') === 'true') {
+                service = selectedOption.textContent; // Use the actual text the user entered
+            }
 
             const contactInput = document.getElementById("contact");
-            const contactDigits = contactInput.value.replace(/\D/g, ''); // Remove non-digit characters
+            const contactDigits = contactInput.value.replace(/\D/g, '');
 
-            // Validate contact number length
+        
             if (contactDigits.length !== 11) {
                 alert("Contact number must be exactly 11 digits. Please retype it in the input field.");
-                contactInput.focus(); // Focus back on the input field
-                return; // Stop form submission
+                contactInput.focus(); 
+                return; 
             }
 
             const contact = contactDigits;
@@ -162,22 +152,25 @@ function setupFormSubmission() {
             records.push(newUser);
             localStorage.setItem("patients", JSON.stringify(records));
 
-            alert("Patient information submitted successfully! the admin will contact you soon.");
-            this.reset(); // Reset form after submission
+            alert("Patient information submitted successfully! The admin will contact you soon.");
+            this.reset();
+            
+            // Remove any custom options added to the select after successful submission
+            const customOptions = serviceSelect.querySelectorAll('option[data-custom="true"]');
+            customOptions.forEach(option => option.remove());
         });
     }
 }
 
-// Contact number validation (optional helper function)
+
 function setupContactValidation() {
     const contactInput = document.getElementById("contact");
     
     if (contactInput) {
         contactInput.addEventListener('input', function() {
-            // Remove any non-digit characters
+      
             this.value = this.value.replace(/\D/g, '');
             
-            // Limit to 11 digits
             if (this.value.length > 11) {
                 this.value = this.value.slice(0, 11);
             }
@@ -185,15 +178,92 @@ function setupContactValidation() {
     }
 }
 
-// Initialize everything when the DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // First, populate services from XML
-    populateServices();
+function setupOthersOption() {
+    const serviceSelect = document.getElementById('service');
+    const othersModal = document.getElementById('othersModal');
+    const otherServiceInput = document.getElementById('otherServiceInput');
+    const closeModal = document.getElementById('closeModal');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const confirmModalBtn = document.getElementById('confirmModalBtn');
     
-    // Then set up all the same functions as before
+    // Track the original service value when others is selected
+    let originalValue = '';
+    
+    if (serviceSelect) {
+        serviceSelect.addEventListener('change', function() {
+            if (this.value === 'others') {
+                originalValue = this.value;
+                othersModal.style.display = 'block';
+                otherServiceInput.focus();
+                // Reset the selection to prevent form submission with 'others' value
+                this.value = '';
+            }
+        });
+    }
+    
+    // Close modal functions
+    function closeOthersModal() {
+        othersModal.style.display = 'none';
+        // Reset the selection if user closes without confirming
+        if (serviceSelect) {
+            serviceSelect.value = '';
+        }
+    }
+    
+    // Event listeners for closing modal
+    closeModal.addEventListener('click', closeOthersModal);
+    cancelModalBtn.addEventListener('click', closeOthersModal);
+    
+    // Confirm button functionality
+    confirmModalBtn.addEventListener('click', function() {
+        const customService = otherServiceInput.value.trim();
+        
+        if (customService) {
+            // Set the custom service as the selected value
+            if (serviceSelect) {
+                // Create a temporary option for the custom service
+                const customOption = document.createElement('option');
+                customOption.value = customService.toLowerCase().replace(/\s+/g, '_');
+                customOption.textContent = customService;
+                customOption.setAttribute('data-custom', 'true');
+                
+                // Add the custom option to the select
+                serviceSelect.appendChild(customOption);
+                
+                // Select the custom option
+                serviceSelect.value = customOption.value;
+            }
+            
+            othersModal.style.display = 'none';
+            otherServiceInput.value = ''; // Clear the input
+        } else {
+            alert('Please enter a service name');
+            otherServiceInput.focus();
+        }
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === othersModal) {
+            closeOthersModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && othersModal.style.display === 'block') {
+            closeOthersModal();
+        }
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await populateServices();
     setupBackButton();
     setupFormSubmission();
     setupContactValidation();
+    setupOthersOption();
     
     console.log('Form initialized with XML services');
 });
